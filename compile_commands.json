@@ -1,0 +1,18 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Wall",
+      "-g",
+      "-std=c++17",
+      "-fsanitize=address",
+      "-c",
+      "-o",
+      "main.o",
+      "main.cpp"
+    ],
+    "directory": "/Users/Kevin/Development/C++/RayTracingInOneWeeked",
+    "file": "/Users/Kevin/Development/C++/RayTracingInOneWeeked/main.cpp",
+    "output": "/Users/Kevin/Development/C++/RayTracingInOneWeeked/main.o"
+  }
+]
