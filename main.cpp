@@ -8,7 +8,31 @@
 #define PROGRESS_REMAIN   "                   "
 #define PROGRESS_BAR_SIZE 20
 
+double hit_shpere(point3 center, float radius, const ray &r) {
+    vec3 dir = r.direction();
+    point3 orig = r.origin();
+    vec3 oc = orig - center;
+
+    double a = dot(dir, dir);
+    double b = 2 * dot(dir, oc);
+    double c = dot(oc, oc) - radius*radius;
+
+    double sq = b*b - 4*a*c;
+
+    // root only exists when b^2 - 4ac >= 0
+    if (sq < 0) return -1;
+
+    // return the nearest one
+    return (-b - std::sqrt(b*b-4*a*c)) / (2 * a);
+}
+
 color ray_color(const ray &r) {
+    vec3 center = vec3(0, 0, -1);
+    double t = hit_shpere(center, 0.5, r);
+    if (t > 0) {
+        vec3 n = unit_vector(r.at(t) - center);
+        return color(n + vec3(1, 1, 1)) * 0.5;
+    }
     vec3 u_dir = unit_vector(r.direction());
     double a = 0.5 * (1 + u_dir.y());
     return (1-a) * color(1, 1, 1) + a * color(0.5, 0.7, 1.0);
@@ -17,7 +41,7 @@ color ray_color(const ray &r) {
 int main() {
 
     double aspect_ratio = 16.0 / 9.0;
-    int image_width = 400;
+    int image_width = 800;
 
     int image_height = int(image_width / aspect_ratio);
     image_height = 1.0 > image_height ? 1.0 : image_height;
