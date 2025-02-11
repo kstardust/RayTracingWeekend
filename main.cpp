@@ -3,36 +3,20 @@
 #include "vec3.h"
 #include "color.h"
 #include "ray.h"
+#include "sphere.h"
 
 #define PROGRESS_FINISHED "###################"
 #define PROGRESS_REMAIN   "                   "
 #define PROGRESS_BAR_SIZE 20
 
-double hit_shpere(point3 center, float radius, const ray &r) {
-    vec3 dir = r.direction();
-    point3 orig = r.origin();
-    vec3 oc = orig - center;
-
-    double a = dot(dir, dir);
-    double b = 2 * dot(dir, oc);
-    double c = dot(oc, oc) - radius*radius;
-
-    double sq = b*b - 4*a*c;
-
-    // root only exists when b^2 - 4ac >= 0
-    if (sq < 0) return -1;
-
-    // return the nearest one
-    return (-b - std::sqrt(b*b-4*a*c)) / (2 * a);
-}
 
 color ray_color(const ray &r) {
-    vec3 center = vec3(0, 0, -1);
-    double t = hit_shpere(center, 0.5, r);
-    if (t > 0) {
-        vec3 n = unit_vector(r.at(t) - center);
-        return color(n + vec3(1, 1, 1)) * 0.5;
+    auto s = sphere(vec3(0, 0, -1), 0.5);
+    hit_record rec;
+    if (s.hit(r, 0, 100, rec)) {
+        return color(rec.norm + vec3(1, 1, 1)) * 0.5;
     }
+
     vec3 u_dir = unit_vector(r.direction());
     double a = 0.5 * (1 + u_dir.y());
     return (1-a) * color(1, 1, 1) + a * color(0.5, 0.7, 1.0);

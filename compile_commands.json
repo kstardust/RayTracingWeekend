@@ -1,11 +1,12 @@
 [
   {
     "arguments": [
-      "/usr/bin/clang++",
+      "/usr/bin/cc",
       "-Wall",
       "-g",
       "-std=c++17",
-      "-fsanitize=address",
+      "-isysroot",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
       "-c",
       "-o",
       "main.o",
@@ -14,5 +15,22 @@
     "directory": "/Users/Kevin/Development/C++/RayTracingInOneWeeked",
     "file": "/Users/Kevin/Development/C++/RayTracingInOneWeeked/main.cpp",
     "output": "/Users/Kevin/Development/C++/RayTracingInOneWeeked/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-g",
+      "-std=c++17",
+      "-isysroot",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+      "-c",
+      "-o",
+      "sphere.o",
+      "sphere.cpp"
+    ],
+    "directory": "/Users/Kevin/Development/C++/RayTracingInOneWeeked",
+    "file": "/Users/Kevin/Development/C++/RayTracingInOneWeeked/sphere.cpp",
+    "output": "/Users/Kevin/Development/C++/RayTracingInOneWeeked/sphere.o"
   }
 ]
