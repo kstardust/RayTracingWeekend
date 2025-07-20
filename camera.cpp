@@ -70,8 +70,8 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const {
   // ignore very closed hit because it might be ourselves because of float point
   // rounding error.
   if (world.hit(r, interval(0.01, infinity), rec)) {
-    vec3 direction = random_on_hemisphere(rec.norm);
-    return 0.5 * ray_color(ray(rec.p, direction), depth - 1, world);
+    vec3 lambert_reflect = rec.norm + random_unit_vector();
+    return 0.5 * ray_color(ray(rec.p, lambert_reflect), depth - 1, world);
   }
 
   vec3 u_dir = unit_vector(r.direction());
