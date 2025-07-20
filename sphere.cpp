@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-bool sphere::hit(const ray &r, double ray_t_min, double ray_t_max,
+bool sphere::hit(const ray &r, const interval &ray_range,
                  hit_record &rec) const {
   vec3 dir = r.direction();
   point3 orig = r.origin();
@@ -21,9 +21,9 @@ bool sphere::hit(const ray &r, double ray_t_min, double ray_t_max,
   // try the nearest one
   double root = (-b - sqr) / (2 * a);
 
-  if (root > ray_t_max || root < ray_t_min) {
+  if (!ray_range.surrounds(root)) {
     root = (-b + sqr) / (2 * a);
-    if (root > ray_t_max || root < ray_t_min)
+    if (!ray_range.surrounds(root))
       return false;
   }
 

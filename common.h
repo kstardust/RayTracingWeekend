@@ -7,6 +7,10 @@
 #include <limits>
 #include <memory>
 
+#define PROGRESS_FINISHED "###################"
+#define PROGRESS_REMAIN "                   "
+#define PROGRESS_BAR_SIZE 20
+
 // C++ Std Usings
 
 using std::make_shared;
@@ -26,6 +30,7 @@ inline double degrees_to_radians(double degrees) {
 // Common Headers
 
 #include "color.h"
+#include "interval.h"
 #include "ray.h"
 #include "vec3.h"
 
