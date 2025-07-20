@@ -6,25 +6,44 @@ void camera::render(const hittable &world) {
 
   printf("P3\n%d %d\n255\n", image_width, image_height);
 
-  for (int i = 0; i < image_height; i++) {
-    int progress = int(double(i) / (image_height - 1) * PROGRESS_BAR_SIZE);
+  for (int v = 0; v < image_height; v++) {
+    int progress = int(double(v) / (image_height - 1) * PROGRESS_BAR_SIZE);
     fprintf(stderr, "\r[%.*s%.*s]", progress, PROGRESS_FINISHED,
             PROGRESS_BAR_SIZE - progress, PROGRESS_REMAIN);
-    for (int j = 0; j < image_width; j++) {
-      point3 pixel_center = pixel00_loc + i * pixel_delta_v + j * pixel_delta_u;
+    for (int u = 0; u < image_width; u++) {
+      point3 pixel_center = pixel00_loc + v * pixel_delta_v + u * pixel_delta_u;
       point3 ray_dir = pixel_center - center;
       ray r(center, ray_dir);
 
-      color pixel_color = ray_color(r, world);
-      write_color(stdout, pixel_color);
+      color pixel_color = color(0, 0, 0);
+      for (int s = 0; s < samples_per_pixel; s++) {
+        ray r = get_ray(u, v);
+        pixel_color += ray_color(r, world);
+      }
+
+      write_color(stdout, pixel_color * pixel_samples_scale);
     }
   }
   fprintf(stderr, "\r[%.*s] \n", PROGRESS_BAR_SIZE, PROGRESS_FINISHED);
 }
 
+ray camera::get_ray(int i, int j) const {
+  vec3 offset = sample_square();
+  auto pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) +
+                      ((j + offset.y()) * pixel_delta_v);
+
+  return ray(center, pixel_sample - center);
+}
+
+vec3 camera::sample_square() const {
+  return vec3(random_double() - 0.5, random_double() - 0.5, 0);
+}
+
 void camera::initialize() {
   image_height = int(image_width / aspect_ratio);
   image_height = 1.0 > image_height ? 1.0 : image_height;
+
+  pixel_samples_scale = 1.0 / samples_per_pixel;
 
   double focal_length = 1.0;
   double viewport_height = 2.0;
@@ -44,7 +63,6 @@ void camera::initialize() {
 }
 
 color camera::ray_color(const ray &r, const hittable &world) const {
-
   hit_record rec;
   if (world.hit(r, interval(0, infinity), rec)) {
     return color(rec.norm + vec3(1, 1, 1)) * 0.5;
