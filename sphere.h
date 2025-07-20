@@ -1,3 +1,6 @@
+#ifndef _SPHERE_H
+#define _SPHERE_H
+
 #include "hittable.h"
 
 class sphere : public hittable {
@@ -11,3 +14,5 @@ private:
   point3 origin;
   double radius;
 };
+
+#endif
