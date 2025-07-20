@@ -71,7 +71,7 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const {
   // rounding error.
   if (world.hit(r, interval(0.01, infinity), rec)) {
     vec3 direction = random_on_hemisphere(rec.norm);
-    return 0.5 * ray_color(ray(rec.p, direction), max_trace_depth - 1, world);
+    return 0.5 * ray_color(ray(rec.p, direction), depth - 1, world);
   }
 
   vec3 u_dir = unit_vector(r.direction());
