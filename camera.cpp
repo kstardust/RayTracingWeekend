@@ -18,7 +18,7 @@ void camera::render(const hittable &world) {
       color pixel_color = color(0, 0, 0);
       for (int s = 0; s < samples_per_pixel; s++) {
         ray r = get_ray(u, v);
-        pixel_color += ray_color(r, world);
+        pixel_color += ray_color(r, max_trace_depth, world);
       }
 
       write_color(stdout, pixel_color * pixel_samples_scale);
@@ -62,10 +62,16 @@ void camera::initialize() {
   pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
-color camera::ray_color(const ray &r, const hittable &world) const {
+color camera::ray_color(const ray &r, int depth, const hittable &world) const {
+  if (depth <= 0)
+    return vec3(0, 0, 0);
+
   hit_record rec;
-  if (world.hit(r, interval(0, infinity), rec)) {
-    return color(rec.norm + vec3(1, 1, 1)) * 0.5;
+  // ignore very closed hit because it might be ourselves because of float point
+  // rounding error.
+  if (world.hit(r, interval(0.01, infinity), rec)) {
+    vec3 direction = random_on_hemisphere(rec.norm);
+    return 0.5 * ray_color(ray(rec.p, direction), max_trace_depth - 1, world);
   }
 
   vec3 u_dir = unit_vector(r.direction());

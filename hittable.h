@@ -2,6 +2,7 @@
 #define _HITTABLE_H
 
 #include "common.h"
+#include "ray.h"
 
 class hit_record {
 public:
