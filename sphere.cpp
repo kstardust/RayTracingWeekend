@@ -18,22 +18,12 @@ bool sphere::hit(const ray &r, double ray_t_min, double ray_t_max,
 
   double sqr = std::sqrt(sq);
 
-  // return the nearest one
-  double root1 = (-b - sqr) / (2 * a);
-  double root2 = (-b + sqr) / (2 * a);
+  // try the nearest one
+  double root = (-b - sqr) / (2 * a);
 
-  double near = root1, far = root2;
-
-  if (abs(root1) > abs(root2)) {
-    near = root2;
-    far = root1;
-  }
-
-  double root = near;
-
-  if (root > ray_t_max && root < ray_t_min) {
-    root = far;
-    if (root > ray_t_max && root < ray_t_min)
+  if (root > ray_t_max || root < ray_t_min) {
+    root = (-b + sqr) / (2 * a);
+    if (root > ray_t_max || root < ray_t_min)
       return false;
   }
 
