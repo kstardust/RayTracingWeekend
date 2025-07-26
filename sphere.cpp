@@ -30,6 +30,7 @@ bool sphere::hit(const ray &r, const interval &ray_range,
   rec.t = root;
   rec.p = r.at(root);
   rec.norm = (rec.p - origin) / radius;
+  rec.mat = mat;
 
   return true;
 }

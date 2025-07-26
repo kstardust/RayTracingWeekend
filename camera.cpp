@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "common.h"
+#include "material.h"
 
 void camera::render(const hittable &world) {
   initialize();
@@ -70,8 +71,13 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const {
   // ignore very closed hit because it might be ourselves because of float point
   // rounding error.
   if (world.hit(r, interval(0.01, infinity), rec)) {
-    vec3 lambert_reflect = rec.norm + random_unit_vector();
-    return 0.5 * ray_color(ray(rec.p, lambert_reflect), depth - 1, world);
+    ray scatterd;
+    color attenuation;
+    if (rec.mat->scatter(r, rec, attenuation, scatterd)) {
+      return attenuation * ray_color(scatterd, depth - 1, world);
+    }
+    // no scatter, swallows all light
+    return color(0, 0, 0);
   }
 
   vec3 u_dir = unit_vector(r.direction());
