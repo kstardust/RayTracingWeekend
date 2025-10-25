@@ -70,7 +70,7 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const {
   hit_record rec;
   // ignore very closed hit because it might be ourselves because of float point
   // rounding error.
-  if (world.hit(r, interval(0.01, infinity), rec)) {
+  if (world.hit(r, interval(0.001, infinity), rec)) {
     ray scatterd;
     color attenuation;
     if (rec.mat->scatter(r, rec, attenuation, scatterd)) {
