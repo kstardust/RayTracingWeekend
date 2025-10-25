@@ -29,7 +29,8 @@ bool sphere::hit(const ray &r, const interval &ray_range,
 
   rec.t = root;
   rec.p = r.at(root);
-  rec.norm = (rec.p - origin) / radius;
+  auto outward_norm = (rec.p - origin) / radius;
+  rec.set_face_normal(r, outward_norm);
   rec.mat = mat;
 
   return true;

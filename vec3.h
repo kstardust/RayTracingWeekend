@@ -120,4 +120,13 @@ inline vec3 reflect(const vec3 &v, const vec3 &n) {
   return v - 2 * dot(v, n) * n;
 }
 
+inline vec3 refract(const vec3 &uv, const vec3 &n, double rindex_ratio) {
+  auto cos_theta = std::fmin(1.0, dot(-uv, n));
+  auto r_out_perp = rindex_ratio * (uv + cos_theta * n);
+  // why abs instead of max(0, x)?
+  auto r_out_parellel =
+      -std::sqrt(std::fabs(1.0 - r_out_perp.length_squared())) * n;
+  return r_out_perp + r_out_parellel;
+}
+
 #endif

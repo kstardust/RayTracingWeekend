@@ -6,7 +6,7 @@
 class camera {
 public:
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 800;
+  int image_width = 400;
   int samples_per_pixel = 10;
   int max_trace_depth = 50;
 
