@@ -9,7 +9,8 @@ int main() {
   hittable_list world;
   auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
   auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-  auto material_left = make_shared<dielectric>(1.00 / 1.33);
+  auto material_left = make_shared<dielectric>(1.50);
+  auto material_bubble = make_shared<dielectric>(1.00 / 1.50);
   auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 1.0);
 
   world.add_object(
@@ -19,6 +20,8 @@ int main() {
   world.add_object(
       make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
   world.add_object(
+      make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
+  world.add_object(
       make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
   camera cam;
@@ -26,6 +29,11 @@ int main() {
   cam.image_width = 800;
   cam.samples_per_pixel = 20;
   cam.max_trace_depth = 10;
+
+  cam.fov = 20;
+  cam.lookfrom = vec3(-2, 2, 1);
+  cam.lookat = vec3(0, 0, -1);
+  cam.vup = vec3(0, 1, 0);
 
   cam.render(world);
 }

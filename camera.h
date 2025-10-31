@@ -9,6 +9,10 @@ public:
   int image_width = 400;
   int samples_per_pixel = 10;
   int max_trace_depth = 50;
+  double fov = 20;
+  point3 lookfrom = point3(0, 0, 0);
+  point3 lookat = point3(0, 0, -1);
+  vec3 vup = vec3(0, 1, 0);
 
   void render(const hittable &world);
 
@@ -19,6 +23,8 @@ private:
   vec3 pixel_delta_v;
   point3 pixel00_loc;
   double pixel_samples_scale;
+  vec3 back, up, right; // normally i would call it 'front', but in this
+                        // tutorial it points opposite the view direction
 
   void initialize();
 
