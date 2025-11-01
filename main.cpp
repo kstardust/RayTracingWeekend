@@ -31,9 +31,12 @@ int main() {
   cam.max_trace_depth = 10;
 
   cam.fov = 20;
-  cam.lookfrom = vec3(-2, 2, 1);
-  cam.lookat = vec3(0, 0, -1);
+  cam.lookfrom = point3(-2, 2, 1);
+  cam.lookat = point3(0, 0, -1);
   cam.vup = vec3(0, 1, 0);
+
+  cam.defocus_angle = 10.0;
+  cam.focus_dist = 3.4;
 
   cam.render(world);
 }

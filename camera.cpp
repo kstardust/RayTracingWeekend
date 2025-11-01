@@ -33,7 +33,13 @@ ray camera::get_ray(int i, int j) const {
   auto pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) +
                       ((j + offset.y()) * pixel_delta_v);
 
-  return ray(center, pixel_sample - center);
+  vec3 origin = defocus_angle <= 0 ? center : defocus_sample();
+  return ray(origin, pixel_sample - origin);
+}
+
+vec3 camera::defocus_sample() const {
+  auto p = random_in_unit_disk();
+  return center + (p.x() * defocus_disk_u) + (p.y() * defocus_disk_v);
 }
 
 vec3 camera::sample_square() const {
@@ -46,9 +52,8 @@ void camera::initialize() {
 
   pixel_samples_scale = 1.0 / samples_per_pixel;
 
-  double focal_length = (lookfrom - lookat).length();
   double h = std::tan(degrees_to_radians(fov / 2.0));
-  double viewport_height = h * 2 * focal_length;
+  double viewport_height = h * 2 * focus_dist;
   double viewport_width =
       viewport_height * (double(image_width) / image_height);
   center = lookfrom;
@@ -64,8 +69,14 @@ void camera::initialize() {
   pixel_delta_v = viewport_v / image_height;
 
   vec3 viewport_upper_left =
-      center - (focal_length * back) - (viewport_u / 2 + viewport_v / 2);
+      center - (focus_dist * back) - (viewport_u / 2 + viewport_v / 2);
   pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+  double defocus_radius =
+      std::tan(degrees_to_radians(defocus_angle / 2)) * focus_dist;
+
+  defocus_disk_u = right * defocus_radius;
+  defocus_disk_v = up * defocus_radius;
 }
 
 color camera::ray_color(const ray &r, int depth, const hittable &world) const {
