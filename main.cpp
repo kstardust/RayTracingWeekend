@@ -3,6 +3,7 @@
 #include "hittable_list.h"
 #include "material.h"
 #include "sphere.h"
+#include <thread>
 
 int main() {
 
@@ -30,7 +31,7 @@ int main() {
   cam.samples_per_pixel = 20;
   cam.max_trace_depth = 10;
 
-  cam.fov = 20;
+  cam.fov = 45;
   cam.lookfrom = point3(-2, 2, 1);
   cam.lookat = point3(0, 0, -1);
   cam.vup = vec3(0, 1, 0);
@@ -38,5 +39,5 @@ int main() {
   cam.defocus_angle = 10.0;
   cam.focus_dist = 3.4;
 
-  cam.render(world);
+  cam.render(world, std::thread::hardware_concurrency());
 }

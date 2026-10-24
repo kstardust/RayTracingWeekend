@@ -2,6 +2,9 @@
 #define _CAMERA_H
 
 #include "hittable.h"
+#include "vec3.h"
+#include <atomic>
+#include <vector>
 
 class camera {
 public:
@@ -17,7 +20,7 @@ public:
   double defocus_angle = 0;
   double focus_dist = 10;
 
-  void render(const hittable &world);
+  void render(const hittable &world, unsigned int concurrency);
 
 private:
   int image_height;
@@ -28,6 +31,8 @@ private:
   double pixel_samples_scale;
   vec3 back, up, right; // normally i would call it 'front', but in this
                         // tutorial it points opposite the view direction
+  std::atomic<int> progress;
+  std::vector<vec3> data;
 
   vec3 defocus_disk_v;
   vec3 defocus_disk_u;
@@ -35,6 +40,7 @@ private:
   void initialize();
 
   color ray_color(const ray &r, int depth, const hittable &world) const;
+  void process_pixels(const hittable &world, size_t start, size_t end);
 
   ray get_ray(int i, int j) const;
   vec3 sample_square() const;
